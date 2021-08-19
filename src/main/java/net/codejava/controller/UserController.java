@@ -8,21 +8,28 @@ import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
 
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
+
 @Controller
-@RequestMapping("/user")
+@RequestMapping()
 public class UserController {
     @Autowired
     private UserService service;
 
-
-    @GetMapping("/{id}")
-    public String show(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/user")
+    public String getUserPage2(ModelMap modelMap, Principal principal) {
+        modelMap.addAttribute("user", service.loadUserByEmail(principal.getName()));
+        return "userPage";
+    }
+    @GetMapping("/user/{id}")
+    public String show(@PathVariable("id") Long id, ModelMap modelMap) {
     User user = service.get(id);
-    model.addAttribute("user", user);
+    modelMap.addAttribute("user", user);
     return "userPage";
 }
 
